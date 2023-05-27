@@ -1,61 +1,20 @@
 import { db } from "../config/database.js";
+import {
+  getAmenitiesByHotelIdDB,
+  getCompleteDataHotelByIdDB,
+  getImagesByHotelIdDB,
+} from "../repositories/hotel.repository.js";
 
 export async function getHotelById(req, res) {
   try {
     const { hotelId } = req;
-    const hotel = await db.query(
-      `
-      SELECT
-        h.id,
-        h.name,
-        h.address,
-        h.price,
-        h.description,
-        c.name AS city
-      FROM
-        hotels AS h
-      JOIN
-        cities AS c
-      ON
-        h.city_id = c.id 
-      WHERE
-        h.id = $1
-      ;
-    `,
-      [hotelId]
-    );
+    const hotel = await getCompleteDataHotelByIdDB(hotelId);
 
-    const { rows: amenitiesRows } = await db.query(
-      `
-      SELECT
-        a.name AS amenity
-      FROM
-        hotel_amenities AS ha
-      JOIN
-        amenities AS a
-      ON
-        a.id = ha.amenity_id
-      WHERE
-        ha.hotel_id = $1
-      ;
-    `,
-      [hotelId]
-    );
+    const { rows: amenitiesRows } = await getAmenitiesByHotelIdDB(hotelId);
 
     const amenities = amenitiesRows.map(({ amenity }) => amenity);
 
-    const { rows: imageRows } = await db.query(
-      `
-      SELECT
-        url
-      FROM
-        images
-      WHERE
-        hotel_id = $1
-      ;
-    `,
-      [hotelId]
-    );
+    const { rows: imageRows } = await getImagesByHotelIdDB(hotelId);
 
     const images = imageRows.map(({ url }) => url);
 

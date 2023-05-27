@@ -1,19 +1,10 @@
 import { db } from "../config/database.js";
+import { getHotelByIdDB } from "../repositories/hotel.repository.js";
 
 export async function hotelExist(req, res, next) {
   try {
     const { id } = req.params;
-    const hotel = await db.query(
-      `
-      SELECT
-        *
-      FROM
-        hotels
-      WHERE
-        id = $1
-    `,
-      [id]
-    );
+    const hotel = await getHotelByIdDB(id);
 
     if (!hotel.rowCount) return res.sendStatus(404);
 
