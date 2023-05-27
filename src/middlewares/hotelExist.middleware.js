@@ -1,4 +1,3 @@
-import { db } from "../config/database.js";
 import { getHotelByIdDB } from "../repositories/hotel.repository.js";
 
 export async function hotelExist(req, res, next) {

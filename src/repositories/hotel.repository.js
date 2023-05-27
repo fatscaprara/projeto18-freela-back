@@ -79,3 +79,29 @@ export function getImagesByHotelIdDB(id) {
 
   return images;
 }
+
+export function getHotelsByDestinationDB(cityId) {
+  const hotels = db.query(
+    `
+    SELECT
+      h.id,
+      h.name,
+      h.address,
+      h.price,
+      h.description,
+      c.name AS city
+    FROM
+      hotels AS h
+    JOIN
+      cities AS c
+    ON
+      h.city_id = c.id 
+    WHERE
+      h.city_id = $1
+    ;
+  `,
+    [cityId]
+  );
+
+  return hotels;
+}

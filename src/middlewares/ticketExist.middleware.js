@@ -1,4 +1,3 @@
-import { db } from "../config/database.js";
 import { getTicketByIdDB } from "../repositories/ticket.repository.js";
 
 export async function ticketExist(req, res, next) {
