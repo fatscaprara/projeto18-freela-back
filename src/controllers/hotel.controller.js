@@ -25,7 +25,31 @@ export async function getHotelById(req, res) {
       [hotelId]
     );
 
-    res.send(hotel.rows[0]);
+    const { rows: amenitiesRows } = await db.query(
+      `
+      SELECT
+        a.name AS amenity
+      FROM
+        hotel_amenities AS ha
+      JOIN
+        amenities AS a
+      ON
+        a.id = ha.amenity_id
+      WHERE
+        ha.hotel_id = $1
+      ;
+    `,
+      [hotelId]
+    );
+
+    const amenities = amenitiesRows.map(({ amenity }) => amenity);
+
+    const hotelData = {
+      ...hotel.rows[0],
+      amenities,
+    };
+
+    res.send(hotelData);
   } catch (err) {
     console.log(err);
     return res.sendStatus(500);
