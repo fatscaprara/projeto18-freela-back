@@ -15,7 +15,7 @@ export async function cityExist(req, res, next) {
       [id]
     );
 
-    if (!city.rowCount) return res.sendStatus(401);
+    if (!city.rowCount) return res.sendStatus(404);
 
     req.cityId = city.rows[0].id;
     next();

@@ -71,3 +71,36 @@ export async function getHotelById(req, res) {
     return res.sendStatus(500);
   }
 }
+
+export async function getHotelsByDestination(req, res) {
+  try {
+    const { cityId } = req;
+
+    const hotels = await db.query(
+      `
+      SELECT
+        h.id,
+        h.name,
+        h.address,
+        h.price,
+        h.description,
+        c.name AS city
+      FROM
+        hotels AS h
+      JOIN
+        cities AS c
+      ON
+        h.city_id = c.id 
+      WHERE
+        h.city_id = $1
+      ;
+    `,
+      [cityId]
+    );
+
+    res.send(hotels.rows);
+  } catch (err) {
+    console.log(err);
+    return res.sendStatus(500);
+  }
+}
