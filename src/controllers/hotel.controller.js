@@ -44,9 +44,25 @@ export async function getHotelById(req, res) {
 
     const amenities = amenitiesRows.map(({ amenity }) => amenity);
 
+    const { rows: imageRows } = await db.query(
+      `
+      SELECT
+        url
+      FROM
+        images
+      WHERE
+        hotel_id = $1
+      ;
+    `,
+      [hotelId]
+    );
+
+    const images = imageRows.map(({ url }) => url);
+
     const hotelData = {
       ...hotel.rows[0],
       amenities,
+      images,
     };
 
     res.send(hotelData);
