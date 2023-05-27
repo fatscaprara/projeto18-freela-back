@@ -1,4 +1,3 @@
-import { db } from "../config/database.js";
 import { getAllCitiesDB } from "../repositories/city.repository.js";
 
 export async function getCities(req, res) {
